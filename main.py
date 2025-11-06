@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from core.db import init_db
-from routes import cocktails, ingredients
+from routes import cocktails, ingredients, ai
 
 
 @asynccontextmanager
@@ -14,6 +14,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(cocktails.router)
 app.include_router(ingredients.router)
+app.include_router(ai.router)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
