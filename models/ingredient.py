@@ -35,11 +35,3 @@ class Ingredient(IngredientBase, table=True):
 
 class IngredientCreate(IngredientBase):
     pass
-
-
-class IngredientEmbedding(SQLModel, table=True):
-    __tablename__ = "ingredient_embeddings"
-
-    id: int | None = Field(default=None, primary_key=True)
-    ingredient_id: int = Field(foreign_key="ingredients.id", nullable=False)
-    embedding: list[float] = Field(sa_column=Column(Vector(1536)))

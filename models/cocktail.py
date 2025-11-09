@@ -37,10 +37,3 @@ class Cocktail(CocktailBase, table=True):
 class CocktailCreate(CocktailBase):
     pass
 
-
-class CocktailEmbedding(SQLModel, table=True):
-    __tablename__ = "cocktail_embeddings"
-
-    id: int | None = Field(default=None, primary_key=True)
-    cocktail_id: int = Field(foreign_key="cocktails.id", nullable=False)
-    embedding: list[float] = Field(sa_column=Column(Vector(1536)))

@@ -51,10 +51,3 @@ class RecipeIngredient(RecipeIngredientBase, table=True):
 
 class RecipeCreate(RecipeBase):
     pass
-
-class RecipeEmbedding(SQLModel, table=True):
-    __tablename__ = "recipe_embeddings"
-
-    id: int | None = Field(default=None, primary_key=True)
-    recipe_id: int = Field(foreign_key="recipes.id", nullable=False)
-    embedding: list[float] = Field(sa_column=Column(Vector(1536)))
