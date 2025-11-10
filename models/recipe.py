@@ -17,7 +17,8 @@ class Recipe(RecipeBase, table=True):
     __tablename__ = "recipes"
     id: int | None = Field(default=None, primary_key=True)
     cocktail: "Cocktail" = Relationship(back_populates="recipes")
-    ingredients: List["RecipeIngredient"] = Relationship(back_populates="recipe")
+    ingredients: List["RecipeIngredient"] = Relationship(
+        back_populates="recipe")
 
     def to_embedding(self):
         ingredient_text = ", ".join([
@@ -45,9 +46,13 @@ class RecipeIngredientBase(SQLModel):
 class RecipeIngredient(RecipeIngredientBase, table=True):
     __tablename__ = "recipe_ingredients"
     id: int | None = Field(default=None, primary_key=True)
-    ingredient: "Ingredient" = Relationship(back_populates="recipes")
-    recipe: "Recipe" = Relationship(back_populates="ingredients")
+    ingredient: "Ingredient" = Relationship(
+        back_populates="recipes",)
+    recipe: "Recipe" = Relationship(back_populates="ingredients",)
 
 
 class RecipeCreate(RecipeBase):
+    pass
+
+class RecipeIngredientCreate(RecipeIngredientBase):
     pass

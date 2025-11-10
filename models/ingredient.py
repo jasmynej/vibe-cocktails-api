@@ -2,8 +2,6 @@ from typing import List
 
 from sqlmodel import SQLModel, Field, Relationship
 from enum import StrEnum
-from sqlalchemy import Column
-from pgvector.sqlalchemy import Vector
 
 class IngredientType(StrEnum):
     SPIRIT = "spirit"
@@ -26,11 +24,7 @@ class Ingredient(IngredientBase, table=True):
     recipes: List["RecipeIngredient"] = Relationship(back_populates="ingredient")
 
     def to_embedding(self):
-        return f"""
-            {self.name}. 
-            {self.flavor_profile}. 
-            {self.type.value}
-            {self.alc_percent}
+        return f"""{self.name}. {self.flavor_profile}. {self.type.value} {self.alc_percent}
         """
 
 class IngredientCreate(IngredientBase):

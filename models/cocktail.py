@@ -1,10 +1,8 @@
 from enum import StrEnum
-from typing import List
+from typing import List, Optional
 
+from pydantic import BaseModel
 from sqlmodel import SQLModel, Field, Relationship
-
-from sqlalchemy import Column
-from pgvector.sqlalchemy import Vector
 
 class CocktailType(StrEnum):
     CLASSIC = "classic"
@@ -19,6 +17,7 @@ class CocktailBase(SQLModel):
     type: CocktailType = Field(default=CocktailType.CLASSIC)
     base_sprit: str
     is_mocktail: bool
+    image: str = Field(default=None)
 
 
 class Cocktail(CocktailBase, table=True):
@@ -28,12 +27,18 @@ class Cocktail(CocktailBase, table=True):
 
     def to_embedding(self):
         intro_text = "This is a mocktail" if self.is_mocktail else f"Base spirit:{self.base_sprit}"
-        return f"""
-            {self.name}. 
-            {self.description}. 
-            {self.flavor_profile}. 
-            {intro_text}"""
+        return f""" {self.name}. {self.description}. {self.flavor_profile}. {intro_text}"""
 
 class CocktailCreate(CocktailBase):
     pass
+
+
+class CocktailUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    flavor_profile: Optional[str] = None
+    type: Optional[str] = None
+    base_sprit: Optional[str] = None
+    is_mocktail: Optional[bool] = None
+    image: Optional[str] = None
 
