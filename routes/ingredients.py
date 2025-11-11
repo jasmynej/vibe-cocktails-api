@@ -1,10 +1,12 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
+from langchain_core.documents import Document
 from sqlmodel import select, Session
 
 from core.db import get_session
 from models import Ingredient, IngredientCreate
+from core.vector_store import get_vector_store
 
 router = APIRouter(prefix="/ingredients", tags=["ingredients"])
 
@@ -36,6 +38,18 @@ def create_many_ingredients(
         session.refresh(ing)
 
     return ingredient_objs
+
+@router.post("/embeddings")
+def create_ingredient_embeddings(session: Session = Depends(get_session)):
+    ingredients = session.exec(select(Ingredient))
+    vector_store = get_vector_store("ingredients")
+    vector_store.delete_collection()
+    vector_store = get_vector_store("ingredients")
+    docs = []
+    for i in ingredients:
+        docs.append(Document(page_content=i.to_embedding(), metadata={"ingredient_id": i.id}))
+    vector_store.add_documents(docs)
+    return {"success": True, "docs": docs}
 
 @router.get("/{ingredient_id}")
 def get_ingredient_by_id(ingredient_id: int, session: Session = Depends(get_session)):

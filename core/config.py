@@ -11,8 +11,6 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str
     AWS_S3_BUCKET: str
     AWS_REGION: str
-    CELERY_BROKER_URL: str
-    CELERY_RESULT_BACKEND: str
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()

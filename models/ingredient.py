@@ -24,8 +24,13 @@ class Ingredient(IngredientBase, table=True):
     recipes: List["RecipeIngredient"] = Relationship(back_populates="ingredient")
 
     def to_embedding(self):
-        return f"""{self.name}. {self.flavor_profile}. {self.type.value} {self.alc_percent}
+        text = f"""
+            Name: {self.name}
+            Flavor Profile: {self.flavor_profile}
+            Type: {self.type.value}
+            Alcohol Percent: {self.alc_percent}
         """
+        return " ".join(text.split())
 
 class IngredientCreate(IngredientBase):
     pass

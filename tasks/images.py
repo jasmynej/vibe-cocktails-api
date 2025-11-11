@@ -1,3 +1,5 @@
+import re
+
 from core.s3 import upload_image_to_s3
 from lib.images import gen_cocktail_image
 from sqlmodel import Session, select
@@ -19,7 +21,8 @@ def generate_cocktail_image(cocktail_id: int):
         )
 
         image_bytes = gen_cocktail_image(prompt)
-        image_name = f"{uuid.uuid4()}-{cocktail.name.replace(' ', '_')}.png"
+        safe_name = re.sub(r"[^A-Za-z0-9_-]", "_", cocktail.name)
+        image_name = f"{uuid.uuid4()}-{safe_name}.png"
         url = upload_image_to_s3(image_bytes, "image/png", name=image_name, folder="cocktail-images")
 
         cocktail.image = url

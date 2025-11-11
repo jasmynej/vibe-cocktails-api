@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 from models import Cocktail, CocktailType, IngredientType,Ingredient, RecipeIngredient, Recipe
 from core.db import get_session, init_db
 
@@ -146,6 +146,13 @@ def create_recipe(session: Session):
     session.add(margarita_recipe)
     session.commit()
 
+def create_slug(session: Session):
+    cocktails_for_slug = session.exec(select(Cocktail)).all()
+    for c in cocktails_for_slug:
+        c.slug = c.generate_slug()
+        session.add(c)
+        print(c)
+    session.commit()
 
 if __name__ == '__main__':
     init_db()
@@ -154,7 +161,8 @@ if __name__ == '__main__':
     try:
         # seed_cocktails(session)
         # seed_ingredients(session)
-        create_recipe(session)
-        print("Ingredients seeded successfully.")
+        # create_recipe(session)
+        create_slug(session)
+        print("Slugs created.")
     finally:
         session.close()
